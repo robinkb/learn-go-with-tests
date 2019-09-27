@@ -1,7 +1,7 @@
 package main
 
-import "fmt"
+const enHelloPrefix = "Hello, "
 
 func Hello(receiver string) string {
-	return fmt.Sprintf("Hello, %s!", receiver)
+	return enHelloPrefix + receiver
 }
