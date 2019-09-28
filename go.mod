@@ -1,4 +1,4 @@
-module github.com/robinkb/go-tdd
+module github.com/robinkb/learn-go-with-tests
 
 go 1.13
 
