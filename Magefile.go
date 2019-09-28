@@ -5,6 +5,8 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"runtime"
+	"strings"
 
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
@@ -19,11 +21,19 @@ type Test mg.Namespace
 
 // Run all tasks defined under "test"
 func (Test) All() error {
+	// Ask the runtime for the name of this function.
+	// I just wanted to see what it looks like. Never do this in code that other people need to see.
+	pc, _, _, _ := runtime.Caller(0)
+	frames := runtime.CallersFrames([]uintptr{pc})
+	frame, _ := frames.Next()
+	parts := strings.Split(frame.Function, ".")
+	this := parts[len(parts)-1]
+
 	typ := reflect.TypeOf(Test{})
 
 	for i := 0; i < typ.NumMethod(); i++ {
 		method := typ.Method(i)
-		if method.Name == "All" { // Lest we recurse infinitely.
+		if method.Name == this { // Lest we recurse infinitely.
 			continue
 		}
 
