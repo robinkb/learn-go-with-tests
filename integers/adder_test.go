@@ -6,26 +6,15 @@ import (
 )
 
 func TestAdder(t *testing.T) {
-	tests := []struct {
-		name string
-		args []int
-		want int
-	}{
-		{"add two numbers",
-			[]int{2, 2},
-			4},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Add(tt.args...); got != tt.want {
-				t.Errorf("Add(%d) = %d, want %d", tt.args, got, tt.want)
-			}
-		})
+	x, y := 1, 2
+	want := 3
+	if got := Add(x, y); got != want {
+		t.Errorf("Add(%d, %d) = %d, want %d", x, y, got, want)
 	}
 }
 
 func ExampleAdd() {
-	sum := Add(1, 2, 3)
+	sum := Add(1, 2)
 	fmt.Println(sum)
-	//Output: 6
+	//Output: 3
 }
