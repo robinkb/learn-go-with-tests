@@ -57,6 +57,11 @@ func (Test) Integers() error {
 	return run("integers")
 }
 
+// Test the "iteration" package
+func (Test) Iteration() error {
+	return run("iteration")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
