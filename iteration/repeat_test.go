@@ -9,10 +9,7 @@ func TestRepeat(t *testing.T) {
 	args := struct {
 		s     string
 		count int
-	}{
-		s:     "a",
-		count: 8,
-	}
+	}{"a", 8}
 	want := "aaaaaaaa"
 
 	if got := Repeat(args.s, args.count); got != want {
