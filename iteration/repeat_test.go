@@ -13,10 +13,9 @@ func TestRepeat(t *testing.T) {
 		s:     "a",
 		count: 8,
 	}
-	got := Repeat(args.s, args.count)
 	want := "aaaaaaaa"
 
-	if got != want {
+	if got := Repeat(args.s, args.count); got != want {
 		t.Errorf("Repeat(%q, %q) = %q, want %q", args.s, args.count, got, want)
 	}
 }
@@ -37,5 +36,4 @@ func ExampleRepeat() {
 	s := Repeat("a", 5)
 	fmt.Println(s)
 	//Output: aaaaa
-
 }
