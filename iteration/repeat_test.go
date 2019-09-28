@@ -1,6 +1,9 @@
 package iteration
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestRepeat(t *testing.T) {
 	args := struct {
@@ -28,4 +31,11 @@ func BenchmarkRepeat(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		Repeat("a", 10)
 	}
+}
+
+func ExampleRepeat() {
+	s := Repeat("a", 5)
+	fmt.Println(s)
+	//Output: aaaaa
+
 }
