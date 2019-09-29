@@ -72,6 +72,11 @@ func (Test) Iteration() error {
 	return run("iteration")
 }
 
+// Test the "iteration" package
+func (Test) ArraysAndSlices() error {
+	return run("arrays_and_slices")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
