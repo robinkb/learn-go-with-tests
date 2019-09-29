@@ -123,5 +123,5 @@ func vet(dir string) error {
 
 // test runs 'go test' in the given directory.
 func test(dir string) error {
-	return sh.RunV("go", "test", "./"+dir)
+	return sh.RunV("go", "test", "-cover", "./"+dir)
 }
