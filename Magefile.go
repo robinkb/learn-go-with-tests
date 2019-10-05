@@ -82,6 +82,11 @@ func (Test) StructsMethodsAndInterfaces() error {
 	return run("structs_methods_and_interfaces")
 }
 
+// Test the "pointers_and_errors" package
+func (Test) PointersAndErrors() error {
+	return run("pointers_and_errors")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
