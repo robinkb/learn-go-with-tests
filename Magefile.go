@@ -87,6 +87,11 @@ func (Test) PointersAndErrors() error {
 	return run("pointers_and_errors")
 }
 
+// Test the "maps" package
+func (Test) Maps() error {
+	return run("maps")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
