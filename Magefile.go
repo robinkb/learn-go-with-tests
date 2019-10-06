@@ -22,34 +22,41 @@ type Test mg.Namespace
 // Run all tasks defined under "test"
 func (Test) All() error {
 	// Ask the runtime for the name of this function.
-	// I just wanted to see what it looks like. Never do this in code that other people need to see.
+	// I just wanted to see what it looks like. Never do this in code that other people need to look at.
 	pc, _, _, _ := runtime.Caller(0)
 	frames := runtime.CallersFrames([]uintptr{pc})
 	frame, _ := frames.Next()
 	parts := strings.Split(frame.Function, ".")
 	this := parts[len(parts)-1]
 
+	// Create a reflect.Type from the Test type.
 	typ := reflect.TypeOf(Test{})
 
+	// Iterate over all methods defined on the Test type and execute them.
 	for i := 0; i < typ.NumMethod(); i++ {
 		method := typ.Method(i)
-		if method.Name == this { // Lest we recurse infinitely.
+		// If the retrieved method is the one currently executing, skip it.
+		// Lest we recurse infinitely.
+		if method.Name == this {
 			continue
 		}
 
+		// Slice of arguments that will be passed to the method.
 		args := []reflect.Value{
-			reflect.ValueOf(Test{}), // The first argument is the receiver.
+			reflect.ValueOf(Test{}), // The first argument is the method's receiver.
 		}
 
+		// Execute the method and catch any number of return values.
 		ret := method.Func.Call(args)
 
 		for _, r := range ret {
+			// We expect any of the methods defined on type Test to either return nil or an error.
 			switch v := r.Interface().(type) {
 			case nil:
 			case error:
 				return v
 			default:
-				return fmt.Errorf("unexpected return value %q", r)
+				return fmt.Errorf("unexpected return value: %q", r)
 			}
 		}
 	}
@@ -138,5 +145,8 @@ func vet(dir string) error {
 
 // test runs 'go test' in the given directory.
 func test(dir string) error {
-	return sh.RunV("go", "test", "-cover", "./"+dir)
+	return sh.RunV("go", "test",
+		"-count=1", // Disable test caching
+		"-cover",   // Enable coverage reporting
+		"./"+dir)
 }
