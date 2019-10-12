@@ -79,19 +79,19 @@ func (Test) Iteration() error {
 	return run("iteration")
 }
 
-// Test the "arrays_and_slices" package
+// Test the "arrays-and-slices" package
 func (Test) ArraysAndSlices() error {
-	return run("arrays_and_slices")
+	return run("arrays-and-slices")
 }
 
-// Test the "structs_methods_and_interfaces" package
+// Test the "structs-methods-and-interfaces" package
 func (Test) StructsMethodsAndInterfaces() error {
-	return run("structs_methods_and_interfaces")
+	return run("structs-methods-and-interfaces")
 }
 
-// Test the "pointers_and_errors" package
+// Test the "pointers-and-errors" package
 func (Test) PointersAndErrors() error {
-	return run("pointers_and_errors")
+	return run("pointers-and-errors")
 }
 
 // Test the "maps" package
