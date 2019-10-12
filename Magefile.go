@@ -99,6 +99,11 @@ func (Test) Maps() error {
 	return run("maps")
 }
 
+// Test the "dependency-injection" package
+func (Test) DependencyInjection() error {
+	return run("dependency-injection")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
