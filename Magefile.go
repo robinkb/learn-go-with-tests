@@ -104,6 +104,11 @@ func (Test) DependencyInjection() error {
 	return run("dependency-injection")
 }
 
+// Test the "mocking" package
+func (Test) Mocking() error {
+	return run("mocking")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
