@@ -114,6 +114,11 @@ func (Test) Concurrency() error {
 	return run("concurrency")
 }
 
+// Test the "select" package
+func (Test) Select() error {
+	return run("select")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
