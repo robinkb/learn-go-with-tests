@@ -109,6 +109,11 @@ func (Test) Mocking() error {
 	return run("mocking")
 }
 
+// Test the "concurrency" package
+func (Test) Concurrency() error {
+	return run("concurrency")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
