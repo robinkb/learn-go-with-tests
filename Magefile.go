@@ -119,6 +119,11 @@ func (Test) Select() error {
 	return run("select")
 }
 
+// Test the "reflection" package
+func (Test) Reflection() error {
+	return run("reflection")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
