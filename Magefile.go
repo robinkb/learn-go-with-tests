@@ -124,6 +124,11 @@ func (Test) Reflection() error {
 	return run("reflection")
 }
 
+// Test the "sync" package
+func (Test) Sync() error {
+	return run("sync")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
