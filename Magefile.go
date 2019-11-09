@@ -3,6 +3,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"runtime"
@@ -21,44 +22,44 @@ type Test mg.Namespace
 
 // Run all tasks defined under "test"
 func (Test) All() error {
-	// Ask the runtime for the name of this function.
-	// I just wanted to see what it looks like. Never do this in code that other people need to look at.
-	pc, _, _, _ := runtime.Caller(0)
-	frames := runtime.CallersFrames([]uintptr{pc})
-	frame, _ := frames.Next()
-	parts := strings.Split(frame.Function, ".")
-	this := parts[len(parts)-1]
+	me := getFunctionName()
 
-	// Create a reflect.Type from the Test type.
-	typ := reflect.TypeOf(Test{})
+	methods, err := getMethods(Test{}, []string{me})
+	if err != nil {
+		return err
+	}
 
-	// Iterate over all methods defined on the Test type and execute them.
-	for i := 0; i < typ.NumMethod(); i++ {
-		method := typ.Method(i)
-		// If the retrieved method is the one currently executing, skip it.
-		// Lest we recurse infinitely.
-		if method.Name == this {
-			continue
-		}
+	errChans := make([]chan error, len(methods))
+	for i := range errChans {
+		errChans[i] = make(chan error, 0)
+	}
 
-		// Slice of arguments that will be passed to the method.
-		args := []reflect.Value{
-			reflect.ValueOf(Test{}), // The first argument is the method's receiver.
-		}
-
-		// Execute the method and catch any number of return values.
-		ret := method.Func.Call(args)
-
-		for _, r := range ret {
-			// We expect any of the methods defined on type Test to either return nil or an error.
-			switch v := r.Interface().(type) {
-			case nil:
-			case error:
-				return v
-			default:
-				return fmt.Errorf("unexpected return value: %q", r)
+	for i := range methods {
+		go func(method call, err chan error) {
+			for _, r := range method() {
+				switch v := r.(type) {
+				case nil:
+				case error:
+					err <- v
+				default:
+					err <- fmt.Errorf("unexpected return value: %#v", r)
+				}
 			}
+
+			close(err)
+
+		}(methods[i], errChans[i])
+	}
+
+	errs := 0
+	for _, errChan := range errChans {
+		for range errChan {
+			errs++
 		}
+	}
+
+	if errs != 0 {
+		return errors.New("some tests failed")
 	}
 
 	return nil
@@ -184,4 +185,79 @@ func test(dir string) error {
 		"-count=1", // Disable test caching
 		"-cover",   // Enable coverage reporting
 		"./"+dir)
+}
+
+// A bunch of functions that wrap the complexities of the reflect package.
+
+// getFunctionName returns the name of the function calling this function.
+func getFunctionName() string {
+	// Return the pointer to the previous call in the call stack,
+	// so the function that called getMethodName().
+	p, _, _, ok := runtime.Caller(1)
+	if !ok {
+		panic("could not get method name: " +
+			"failed to retrieve pointer to calling function")
+	}
+
+	// Return information about the function behind the pointer.
+	frames := runtime.CallersFrames([]uintptr{p})
+	frame, _ := frames.Next()
+
+	// frame.Function looks like "main.func1.func2",
+	// so split on the dots and return the last part.
+	parts := strings.Split(frame.Function, ".")
+	return parts[len(parts)-1]
+}
+
+type call func(args ...interface{}) []interface{}
+
+// getMethods returns all methods for the given struct, except the ones in the list of exceptions.
+func getMethods(s interface{}, except []string) ([]call, error) {
+	structType := reflect.TypeOf(s)
+	if structType.Kind() != reflect.Struct {
+		return nil, errors.New("give me a struct, dimwit")
+	}
+
+	structValue := reflect.ValueOf(s)
+
+	calls := make([]call, 0)
+
+	for i := 0; i < structType.NumMethod(); i++ {
+		method := structType.Method(i)
+
+		if contains(except, method.Name) {
+			continue
+		}
+
+		calls = append(calls,
+			func(args ...interface{}) []interface{} {
+				in := make([]reflect.Value, len(args)+1)
+
+				in[0] = structValue
+				for i := range args {
+					in[i+1] = reflect.ValueOf(args[i])
+				}
+
+				out := method.Func.Call(in)
+
+				ret := make([]interface{}, len(out))
+				for i := range ret {
+					ret[i] = out[i].Interface()
+				}
+
+				return ret
+			})
+	}
+
+	return calls, nil
+}
+
+func contains(haystack []string, needle string) bool {
+	for i := range haystack {
+		if haystack[i] == needle {
+			return true
+		}
+	}
+
+	return false
 }
