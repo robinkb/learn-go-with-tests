@@ -129,6 +129,11 @@ func (Test) Sync() error {
 	return run("sync")
 }
 
+// Test the "context" package
+func (Test) Context() error {
+	return run("context")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
