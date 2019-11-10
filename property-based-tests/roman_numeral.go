@@ -23,7 +23,7 @@ var RomanNumerals = []RomanNumeral{
 	{1, "I"},
 }
 
-func ArabicToRoman(arabic uint16) string {
+func ConvertToRoman(arabic uint16) string {
 	sb := strings.Builder{}
 
 	for _, numeral := range RomanNumerals {
@@ -36,7 +36,7 @@ func ArabicToRoman(arabic uint16) string {
 	return sb.String()
 }
 
-func RomanToArabic(roman string) uint16 {
+func ConvertToArabic(roman string) uint16 {
 	var arabic uint16 = 0
 
 	for _, numeral := range RomanNumerals {

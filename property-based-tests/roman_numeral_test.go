@@ -41,23 +41,23 @@ var cases = []struct {
 	{798, "DCCXCVIII"},
 }
 
-func TestArabicToRoman(t *testing.T) {
+func TestConvertToRoman(t *testing.T) {
 	for _, test := range cases {
 		name := fmt.Sprintf("%d returns %s", test.Arabic, test.Roman)
 		t.Run(name, func(t *testing.T) {
-			if got := ArabicToRoman(test.Arabic); got != test.Roman {
-				t.Errorf("ArabicToRoman(%d) = %q, want %q", test.Arabic, got, test.Roman)
+			if got := ConvertToRoman(test.Arabic); got != test.Roman {
+				t.Errorf("ConvertToRoman(%d) = %q, want %q", test.Arabic, got, test.Roman)
 			}
 		})
 	}
 }
 
-func TestRomanToArabic(t *testing.T) {
+func TestConvertToArabic(t *testing.T) {
 	for _, test := range cases {
 		name := fmt.Sprintf("%s returns %d", test.Roman, test.Arabic)
 		t.Run(name, func(t *testing.T) {
-			if got := RomanToArabic(test.Roman); got != test.Arabic {
-				t.Errorf("RomanToArabic(%q) = %d, want %d", test.Roman, got, test.Arabic)
+			if got := ConvertToArabic(test.Roman); got != test.Arabic {
+				t.Errorf("ConvertToArabic(%q) = %d, want %d", test.Roman, got, test.Arabic)
 			}
 		})
 	}
@@ -69,8 +69,8 @@ func TestPropertiesOfConversion(t *testing.T) {
 			return true
 		}
 
-		roman := ArabicToRoman(arabic)
-		fromRoman := RomanToArabic(roman)
+		roman := ConvertToRoman(arabic)
+		fromRoman := ConvertToArabic(roman)
 		return fromRoman == arabic
 	}
 
