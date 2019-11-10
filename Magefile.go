@@ -135,6 +135,11 @@ func (Test) Context() error {
 	return run("context")
 }
 
+// Test the "property-based-tests" package
+func (Test) PropertyBasedTests() error {
+	return run("property-based-tests")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
