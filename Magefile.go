@@ -197,10 +197,10 @@ func test(dir string) error {
 // getFunctionName returns the name of the function calling this function.
 func getFunctionName() string {
 	// Return the pointer to the previous call in the call stack,
-	// so the function that called getMethodName().
+	// so the function that called getFunctionName().
 	p, _, _, ok := runtime.Caller(1)
 	if !ok {
-		panic("could not get method name: " +
+		panic("could not get function name: " +
 			"failed to retrieve pointer to calling function")
 	}
 
