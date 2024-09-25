@@ -28,8 +28,16 @@ func (i *InMemoryPlayerStore) RecordWin(name string) {
 	i.store[name]++
 }
 
+func (i *InMemoryPlayerStore) GetLeague() []Player {
+	var league []Player
+	for name, wins := range i.store {
+		league = append(league, Player{name, wins})
+	}
+	return league
+}
+
 func NewBadgerPlayerStore() (*BadgerPlayerStore, error) {
-	db, err := badger.Open(badger.DefaultOptions("/tmp/badger"))
+	db, err := badger.Open(badger.DefaultOptions("").WithInMemory(true))
 	if err != nil {
 		return nil, err
 	}
@@ -99,11 +107,8 @@ func (b *BadgerPlayerStore) RecordWin(name string) {
 }
 
 func main() {
-	store, err := NewBadgerPlayerStore()
-	if err != nil {
-		log.Fatal(err)
-	}
+	store := NewInMemoryPlayerStore()
+	server := NewPlayerServer(store)
 
-	server := &PlayerServer{store}
 	log.Fatal(http.ListenAndServe(":5000", server))
 }
