@@ -140,6 +140,11 @@ func (Test) PropertyBasedTests() error {
 	return run("property-based-tests")
 }
 
+// Test the "maths" package
+func (Test) Maths() error {
+	return run("maths")
+}
+
 // task defines the type for a function that runs a task in the given directory.
 type task func(dir string) error
 
